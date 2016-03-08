@@ -3,7 +3,8 @@
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
@@ -60,3 +61,7 @@ node_modules
 
 # Project build
 redux-segment.js
+
+# Webstorm
+*.idea
+

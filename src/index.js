@@ -1,4 +1,5 @@
 import EventTypes from './event/types';
+import defaultMapper from './event/configuration';
 import { extractIdentifyFields } from './event/identify';
 import { extractPageFields } from './event/page';
 import { extractTrackFields } from './event/track';
@@ -10,14 +11,17 @@ function emit(type: string, fields: Array) {
   window.analytics && window.analytics[type](...fields);
 }
 
-function createTracker() {
-  return () =>  next => action => handleAction(next, action);
+function createTracker(customMapper) {
+  const mapper = Object.assign({}, defaultMapper, customMapper);
+  return mapper =>  next => action => handleAction(next, action, mapper);
 }
 
-function handleAction(next: Function, action: Object) {
+function handleAction(next: Function, action: Object, mapper: Any) {
+  if(typeof mapper[action.type] === 'function') Object.assign(action, mapper[action.type]());
+
   if (action.meta && action.meta.analytics) return handleSpec(next, action);
 
-  return handleActionType(next, action);
+  return handleActionType(next, action, mapper);
 }
 
 function getFields(type: string, fields: Object, actionType: string) {
@@ -50,17 +54,10 @@ function handleSpec(next: Function, action: Object) {
   return next(action);
 }
 
-function handleActionType(next: Function, action: Object) {
-  switch (action.type) {
-    case '@@router/INIT_PATH':
-    case '@@router/UPDATE_PATH':
-    case '@@reduxReactRouter/initRoutes':
-    case '@@reduxReactRouter/routerDidChange':
-    case '@@reduxReactRouter/replaceRoutes':
-      emit(EventTypes.page);
-      break;
-    default:
-  }
+function handleActionType(next: Function, action: Object, mapper: Object) {
+  const eventType = mapper[action.type];
+
+  eventType && emit(EventTypes[eventType]);
 
   return next(action);
 }
