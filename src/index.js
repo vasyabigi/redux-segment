@@ -11,7 +11,7 @@ function emit(type: string, fields: Array) {
   window.analytics && window.analytics[type](...fields);
 }
 
-function createTracker(options) {
+function createTracker(options = {}) {
   const mapper = Object.assign({}, { mapper : defaultMapper.mapper }, options.mapper);
   return store => next => action => handleAction(store.getState.bind(store), next, action, mapper);
 }
