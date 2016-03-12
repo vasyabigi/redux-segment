@@ -12,7 +12,7 @@ function emit(type: string, fields: Array) {
 }
 
 function createTracker(options) {
-  const mapper = Object.assign({}, { mapper : defaultMapper.mapper }, options);
+  const mapper = Object.assign({}, { mapper : defaultMapper.mapper }, options.mapper);
   return store => next => action => handleAction(store.getState.bind(store), next, action, mapper);
 }
 
