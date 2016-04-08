@@ -1,4 +1,5 @@
 import EventTypes from './event/types';
+import { defaultMapper } from './event/configuration';
 import { extractIdentifyFields } from './event/identify';
 import { extractPageFields } from './event/page';
 import { extractTrackFields } from './event/track';
@@ -10,14 +11,33 @@ function emit(type: string, fields: Array) {
   window.analytics && window.analytics[type](...fields);
 }
 
-function createTracker() {
-  return () =>  next => action => handleAction(next, action);
+function createTracker(options = {}) {
+  const mapper = Object.assign({}, { mapper : defaultMapper.mapper }, options.mapper);
+  return store => next => action => handleAction(store.getState.bind(store), next, action, mapper);
 }
 
-function handleAction(next: Function, action: Object) {
+function appendAction(action: Object, analytics: Object) {
+  action.meta = Object.assign(
+    {},
+    {...action.meta},
+    { analytics : { ...action.meta.analytics, ...analytics } }
+  );
+
+  return action;
+}
+
+function handleAction(getState: Function, next: Function, action: Object, mapper: Object) {
   if (action.meta && action.meta.analytics) return handleSpec(next, action);
 
-  return handleActionType(next, action);
+  if (typeof mapper[action.type] === 'function') {
+    let analytics = mapper[action.type](getState);
+    return handleSpec(next, appendAction(action, analytics));
+  }
+
+  if (typeof mapper[action.type] === 'string') {
+    let analytics = {eventType: mapper[action.type]};
+    return handleSpec(next, appendAction(action, analytics));
+  }
 }
 
 function getFields(type: string, fields: Object, actionType: string) {
@@ -46,22 +66,6 @@ function handleSpec(next: Function, action: Object) {
   const fields = getFields(type, spec.eventPayload || {}, action.type);
 
   emit(type, fields);
-
-  return next(action);
-}
-
-function handleActionType(next: Function, action: Object) {
-  switch (action.type) {
-    case '@@router/INIT_PATH':
-    case '@@router/UPDATE_PATH':
-    case '@@router/LOCATION_CHANGE':
-    case '@@reduxReactRouter/initRoutes':
-    case '@@reduxReactRouter/routerDidChange':
-    case '@@reduxReactRouter/replaceRoutes':
-      emit(EventTypes.page);
-      break;
-    default:
-  }
 
   return next(action);
 }
