@@ -84,7 +84,7 @@ export function addTodo(text) {
 Or if you want to save keystrokes:
 
 ```
-export function addTodo(text) {
+export function addTodo(payload) {
   return {
     type: types.ADD_TODO,
     payload,
