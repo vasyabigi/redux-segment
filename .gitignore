@@ -69,5 +69,3 @@ redux-segment.js
 # Notes
 *.txt
 
-# Local distribution
-dist

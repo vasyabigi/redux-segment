@@ -1,6 +1,6 @@
 {
   "name": "redux-segment",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Segment.io analytics integration for redux.",
   "main": "dist/index.js",
   "scripts": {
