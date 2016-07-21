@@ -46,7 +46,7 @@ your Redux application with minimal configuration. You are already
 specifying the [actions](https://github.com/rackt/redux/blob/master/docs/basics/Actions.md)
 you care about:
 
-```
+```js
 export function addTodo(text) {
   return {
     type: types.ADD_TODO,
@@ -59,7 +59,7 @@ export function addTodo(text) {
 
 Just tell the middleware you also want it tracked:
 
-```
+```js
 export function addTodo(text) {
   return {
     type: types.ADD_TODO,
@@ -83,7 +83,7 @@ export function addTodo(text) {
 
 Or if you want to save keystrokes:
 
-```
+```js
 export function addTodo(payload) {
   return {
     type: types.ADD_TODO,
@@ -157,7 +157,7 @@ npm install --save redux-segment
 
 **1. Create and apply the tracker**
 
-```
+```js
 import { applyMiddleware, createStore, compose } from 'redux';
 import { reduxReactRouter } from 'redux-router'
 import createHistory from 'history/lib/createBrowserHistory'
@@ -184,7 +184,7 @@ middleware so that it sees actual actions._
 **2. Optional, Access Third Party Redux Libraries**
 Provide an optional config object to `createTracker(customMapper)` to map third party Redux library ActionTypes to Segment EventTypes and replace out-of-the-box support (if necessary). Note that the mappings can be either simple EventTypes, or mappings to functions if required that returns state information and EventType.
  
-```
+```js
 import { EventTypes } from 'redux-segment'
 const customMapper = {
   mapper: {
@@ -208,7 +208,7 @@ const tracker = createTracker(customMapper);
 
 **2. Copy the segment snippet into the header of your site**
 
-```
+```html
 <head>
   <title>My amazing app</title>
   ...
@@ -249,7 +249,7 @@ content.**
 In Redux Segment, events are declared on the action they represent. For
 example:
 
-```
+```js
 import { EventTypes } from 'redux-segment';
 
 function buy(cart, subtotal, tax, total) {
