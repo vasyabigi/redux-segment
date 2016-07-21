@@ -281,7 +281,7 @@ function openCart() {
 }
 ```
 
-Event specifications are attached the the `analytics` property of the
+Event specifications are attached to the `analytics` property of the
 action's `meta` key. When using the short-hand, required keys are
 inferred.
 
