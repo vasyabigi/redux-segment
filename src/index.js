@@ -11,9 +11,11 @@ function emit(type: string, fields: Array) {
   window.analytics && window.analytics[type](...fields);
 }
 
-function createTracker(options = {}) {
-  const mapper = Object.assign({}, { mapper : defaultMapper.mapper }, options.mapper);
-  return store => next => action => handleAction(store.getState.bind(store), next, action, mapper);
+function createTracker(customOptions = {}) {
+  const options = {
+    mapper: Object.assign({}, defaultMapper.mapper, customOptions.mapper)
+  };
+  return store => next => action => handleAction(store.getState.bind(store), next, action, options);
 }
 
 function appendAction(action: Object, analytics: Object) {
