@@ -33,7 +33,7 @@ function handleAction(getState: Function, next: Function, action: Object, option
 
   if (typeof options.mapper[action.type] === 'function') {
 
-    let analytics = options.mapper[action.type](getState);
+    let analytics = options.mapper[action.type](getState, action);
     return handleSpec(next, appendAction(action, analytics));
   }
 

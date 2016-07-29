@@ -182,7 +182,7 @@ _Note: Make sure to include the tracker *after* thunk or promise
 middleware so that it sees actual actions._
 
 **2. Optional, Access Third Party Redux Libraries**
-Provide an optional config object to `createTracker(customMapper)` to map third party Redux library ActionTypes to Segment EventTypes and replace out-of-the-box support (if necessary). Note that the mappings can be either simple EventTypes, or mappings to functions if required that returns state information and EventType.
+Provide an optional config object to `createTracker(customMapper)` to map third party Redux library ActionTypes to Segment EventTypes and replace out-of-the-box support (if necessary). Note that the mappings can be either simple EventTypes, or mappings to functions if access to state and action is required, that returns state information and EventType.
  
 ```js
 import { EventTypes } from 'redux-segment'
@@ -190,7 +190,7 @@ const customMapper = {
   mapper: {
     '@@router/CALL_HISTORY_LOCATION': EventTypes.page,
     '@@router/UPDATE_LOCATION': EventTypes.page,
-    '@@reduxReactRouter/replaceRoutes': (getState) => {
+    '@@reduxReactRouter/replaceRoutes': (getState, action) => {
       return {
         eventType: EventTypes.page,
         eventPayload: {
